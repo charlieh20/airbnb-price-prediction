@@ -1,5 +1,5 @@
 # Airbnb Price Prediction
-Author: Charlie Hipps
+Author: Charlie Hipps<br>
 Date: December 5, 2023
 
 ## Introduction
