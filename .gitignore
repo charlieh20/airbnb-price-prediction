@@ -1,0 +1,8 @@
+# Large data files
+/data/train_images/*
+/data/test_images/*
+/predictions/*
+
+# System files
+.DS_Store
+*/__pycache__
