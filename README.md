@@ -3,32 +3,32 @@
 
 ## Introduction
 
-This goal of this project was to research the best ways predict the price category (scale 0 to 5) of AirBnb listings in the Los Angeles area based on scraped data about each listing as part of a Kaggle competition. A full description of the competition and datasets can be found here: https://www.kaggle.com/competitions/duke-cs671-fall23-airbnb-competition/overview. Along with accurate price prediction, the goal of this project was to compare the performance of various machine learning networks and prediction techniques. Below is a complete summary of my work.
+This goal of this project was to research the best ways predict the price category (scale 0 to 5) of AirBnb listings in the Los Angeles area based on scraped data about each listing as part of a Kaggle competition. A full description of the competition and datasets can be found [here](https://www.kaggle.com/competitions/duke-cs671-fall23-airbnb-competition/overview). Along with accurate price prediction, the goal of this project was to compare the performance of various machine learning networks and prediction techniques. Below is a complete summary of my work.
 
 ## Exploratory Analysis
 
-The first step in approaching this problem is analyzing the given dataset. The dataset has 46 features other than price, but upon initial observation, it was clear that some would be much more useful than others. For example, features information on the scraping of the data (`scrape\_id`, `last\_scraped`, and `calendar\_last\_scraped`) will likely not be as useful as location data (`latitude` and `longitude`). Eliminating extraneous features will simplify the models while maintaining accuracy, and possible reducing overfitting to the given dataset. However, before making assumptions about the relevancy of certain features, we must do a more formal analysis of the dataset.\\
-\\
-To help our understanding of the features throughout analysis, I will partition the features into four categories: metadata, booking information, property description, and property location. Here is a table of the categorization of the features (some are abbreviated and/or grouped):\\
-\\
-[Categorization of Features](/visualizations/outputs/feature_categories.png)
+The first step in approaching this problem is analyzing the given dataset. The dataset has 46 features other than price, but upon initial observation, it was clear that some would be much more useful than others. For example, features information on the scraping of the data (`scrape\_id`, `last\_scraped`, and `calendar\_last\_scraped`) will likely not be as useful as location data (`latitude` and `longitude`). Eliminating extraneous features will simplify the models while maintaining accuracy, and possible reducing overfitting to the given dataset. However, before making assumptions about the relevancy of certain features, we must do a more formal analysis of the dataset.
+
+To help our understanding of the features throughout analysis, I will partition the features into four categories: metadata, booking information, property description, and property location. Here is a table of the categorization of the features (some are abbreviated and/or grouped):
+
+![Categorization of Features](/visualizations/outputs/feature_categories.png)
 
 We will use these categories to guide our analysis as we visualize the dataset. I expect that data within the same category will often be closely related.
 
-To begin, we will look at various visualizations of the dataset. These will all focus on the relationship between various features and price. First, let's examine the property description category. Notice the similar patterns between the `beds` and `accommodates` features shown Figures \ref{fig:beds_hist` and \ref{fig:accom_hist`. Both have a similar effect on the price distribution, but `accommodates` seems to have a more consistent effect, while also not having empty values like `beds` does. `beds` and `accommodates` are also highly correlated, so it may prove useful to only use the `accommodates` feature instead of both.\\
-\\
-Now, consider the booking information category. There are less clear relationships between price distributions and the variables in this category. This is shown in the figures below, which show the changes in distribution caused by `number\_reviews\_ltm` and `availability\_365`, respectively. However, there are slight differences in the distributions, so there may be value in including these in models.\\
-\\
-[Price versus Review History bar chart](/visualizations/outputs/reviews_ltm_hist.png)\\
-\\
-[Price versus Availability History bar chart](/visualizations/outputs/avail_365_hist.png)\\
-\\
-The last category I looked at visualizations for was the location category. The map below was produced using the relationship between `latitude` and `longitude` data and price. There are no clear boundaries between prices based solely on location, but it is clear that there are higher and lower priced areas. There are more mapping visualizations that I did, while separating based on property description features that are shown in the submitted code, but there are always outliers within the map.\\
-\\
-[Map of locations color-labeled by price category](/visualizations/outputs/lat_long_full.png)\\
-\\
-Beyond these visualizations, there are some other important things to note about the dataset. Most importantly, there are many features that are very irrelevant to the price. Most notably, metadata like `scrape\_id` and `last\_scraped` need to be dropped. `last\_scraped` only has two unique values and seems to be arbitrary, while `scrape\_id` is unique for all listings and would only lead to overfitting. In addition, features like `picture\_url` and `description` require unique processing, so they will be difficult to include. I may experiment with these, but an initial exploration of the images was not promising. They all seem to be of random parts of the properties and some of the images cannot be reached.\\
-\\
+To begin, we will look at various visualizations of the dataset. These will all focus on the relationship between various features and price. First, let's examine the property description category. Notice the similar patterns between the `beds` and `accommodates` features shown Figures \ref{fig:beds_hist` and \ref{fig:accom_hist`. Both have a similar effect on the price distribution, but `accommodates` seems to have a more consistent effect, while also not having empty values like `beds` does. `beds` and `accommodates` are also highly correlated, so it may prove useful to only use the `accommodates` feature instead of both.
+
+Now, consider the booking information category. There are less clear relationships between price distributions and the variables in this category. This is shown in the figures below, which show the changes in distribution caused by `number\_reviews\_ltm` and `availability\_365`, respectively. However, there are slight differences in the distributions, so there may be value in including these in models.
+
+![Price versus Review History bar chart](/visualizations/outputs/reviews_ltm_hist.png)
+
+![Price versus Availability History bar chart](/visualizations/outputs/avail_365_hist.png)
+
+The last category I looked at visualizations for was the location category. The map below was produced using the relationship between `latitude` and `longitude` data and price. There are no clear boundaries between prices based solely on location, but it is clear that there are higher and lower priced areas. There are more mapping visualizations that I did, while separating based on property description features that are shown in the submitted code, but there are always outliers within the map.
+
+![Map of locations color-labeled by price category](/visualizations/outputs/lat_long_full.png)
+
+Beyond these visualizations, there are some other important things to note about the dataset. Most importantly, there are many features that are very irrelevant to the price. Most notably, metadata like `scrape\_id` and `last\_scraped` need to be dropped. `last\_scraped` only has two unique values and seems to be arbitrary, while `scrape\_id` is unique for all listings and would only lead to overfitting. In addition, features like `picture\_url` and `description` require unique processing, so they will be difficult to include. I may experiment with these, but an initial exploration of the images was not promising. They all seem to be of random parts of the properties and some of the images cannot be reached.
+
 The summary of this analysis is it appears the models can be simplified by removing some correlated features, but the lack of clear relationships mean that it may be useful to use as many processable, relevant features as possible.
 
 ## Models
@@ -82,13 +82,13 @@ To select optimal parameters for the random forest classifier, I did two grid se
 
 A graph of the effect of the number of estimators used in the forest on the accuracy can be seen in the figure below. This was produced by the first round of grid search.
 
-[Plot of Number of Estimators versus Accuracy](/models/graphics/rf_ests_vs_acc.png)
+![Plot of Number of Estimators versus Accuracy](/models/graphics/rf_ests_vs_acc.png)
 
 ## Boosting
 
 Similar to the random forest classifier, I used a grid search with cross validation across three parameters for XGBoost. A graph of the effect of learning rate used in the training of the model on the accuracy can be seen in the figure below. This was produced by the first round of grid search.
 
-[Plot of Learning Rate versus Accuracy](/models/graphics/learn_acc.png)
+![Plot of Learning Rate versus Accuracy](/models/graphics/learn_acc.png)
 
 ## Data Splits
 
