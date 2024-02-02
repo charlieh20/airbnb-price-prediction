@@ -8,7 +8,7 @@ This goal of this project was to research the best ways predict the price catego
 
 ## Exploratory Analysis
 
-The first step in approaching this problem is analyzing the given dataset. The dataset has 46 features other than price, but upon initial observation, it was clear that some would be much more useful than others. For example, features information on the scraping of the data (`scrape\_id`, `last\_scraped`, and `calendar\_last\_scraped`) will likely not be as useful as location data (`latitude` and `longitude`). Eliminating extraneous features will simplify the models while maintaining accuracy, and possible reducing overfitting to the given dataset. However, before making assumptions about the relevancy of certain features, we must do a more formal analysis of the dataset.
+The first step in approaching this problem is analyzing the given dataset. The dataset has 46 features other than price, but upon initial observation, it was clear that some would be much more useful than others. For example, features information on the scraping of the data (`scrape_id`, `last_scraped`, and `calendar_last_scraped`) will likely not be as useful as location data (`latitude` and `longitude`). Eliminating extraneous features will simplify the models while maintaining accuracy, and possible reducing overfitting to the given dataset. However, before making assumptions about the relevancy of certain features, we must do a more formal analysis of the dataset.
 
 To help our understanding of the features throughout analysis, I will partition the features into four categories: metadata, booking information, property description, and property location. Here is a table of the categorization of the features (some are abbreviated and/or grouped):
 
@@ -18,7 +18,7 @@ We will use these categories to guide our analysis as we visualize the dataset. 
 
 To begin, we will look at various visualizations of the dataset. These will all focus on the relationship between various features and price. First, let's examine the property description category. Notice the similar patterns between the `beds` and `accommodates` features shown Figures \ref{fig:beds_hist` and \ref{fig:accom_hist`. Both have a similar effect on the price distribution, but `accommodates` seems to have a more consistent effect, while also not having empty values like `beds` does. `beds` and `accommodates` are also highly correlated, so it may prove useful to only use the `accommodates` feature instead of both.
 
-Now, consider the booking information category. There are less clear relationships between price distributions and the variables in this category. This is shown in the figures below, which show the changes in distribution caused by `number\_reviews\_ltm` and `availability\_365`, respectively. However, there are slight differences in the distributions, so there may be value in including these in models.
+Now, consider the booking information category. There are less clear relationships between price distributions and the variables in this category. This is shown in the figures below, which show the changes in distribution caused by `number_reviews_ltm` and `availability_365`, respectively. However, there are slight differences in the distributions, so there may be value in including these in models.
 
 ![Price versus Review History bar chart](/visualizations/outputs/reviews_ltm_hist.png)
 
@@ -28,7 +28,7 @@ The last category I looked at visualizations for was the location category. The 
 
 ![Map of locations color-labeled by price category](/visualizations/outputs/lat_long_full.png)
 
-Beyond these visualizations, there are some other important things to note about the dataset. Most importantly, there are many features that are very irrelevant to the price. Most notably, metadata like `scrape\_id` and `last\_scraped` need to be dropped. `last\_scraped` only has two unique values and seems to be arbitrary, while `scrape\_id` is unique for all listings and would only lead to overfitting. In addition, features like `picture\_url` and `description` require unique processing, so they will be difficult to include. I may experiment with these, but an initial exploration of the images was not promising. They all seem to be of random parts of the properties and some of the images cannot be reached.
+Beyond these visualizations, there are some other important things to note about the dataset. Most importantly, there are many features that are very irrelevant to the price. Most notably, metadata like `scrape_id` and `last_scraped` need to be dropped. `last_scraped` only has two unique values and seems to be arbitrary, while `scrape_id` is unique for all listings and would only lead to overfitting. In addition, features like `picture_url` and `description` require unique processing, so they will be difficult to include. I may experiment with these, but an initial exploration of the images was not promising. They all seem to be of random parts of the properties and some of the images cannot be reached.
 
 The summary of this analysis is it appears the models can be simplified by removing some correlated features, but the lack of clear relationships mean that it may be useful to use as many processable, relevant features as possible.
 
